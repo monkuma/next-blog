@@ -1,7 +1,16 @@
 import Head from "next/head";
 import Link from "next/link";
+import { getPosts } from "../lib/posts";
 
-function HomaPage() {
+export async function getStaticProps() {
+  const posts = await getPosts();
+  return {
+    props: { posts },
+  };
+}
+
+function HomaPage({ posts }) {
+  console.log();
   return (
     <>
       <Head>
@@ -11,12 +20,13 @@ function HomaPage() {
         <h1>My Blog</h1>
       </main>
       <ul>
-        <li>
-          {" "}
-          <Link href="/posts/first-post">FirstPostPage</Link>
-        </li>
-        <li>two</li>
-        <li>three</li>
+        {posts.map((post) => {
+          return (
+            <li key={post.slug}>
+              <Link href="/posts/${post.slug}">{post.title}</Link>
+            </li>
+          );
+        })}
       </ul>
     </>
   );
